@@ -1,10 +1,35 @@
 {
   "canisters": {
+    "SKALE": {
+      "main": "src/SKALE/main.mo",
+      "type": "motoko",
+      "declarations": {
+        "node_compatibility": true,
+        "output": "src/declarations/SKALE"
+      },
+      "features": ["ic-https-outcalls"]
+    },
+    "PHA": {
+      "main": "src/PHA/main.mo",
+      "type": "motoko",
+      "declarations": {
+        "node_compatibility": true,
+        "output": "src/declarations/PHA"
+      },
+      "features": ["ic-https-outcalls"]
+    },
     "hello_backend": {
       "declarations": {
         "node_compatibility": true
       },
       "main": "src/hello_backend/main.mo",
+      "type": "motoko"
+    },
+    "jorge": {
+      "declarations": {
+        "node_compatibility": true
+      },
+      "main": "src/jorge/main.mo",
       "type": "motoko"
     },
     "hello_frontend": {
