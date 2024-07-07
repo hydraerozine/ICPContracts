@@ -11,9 +11,15 @@
         <h1>Receipt System Dashboard</h1>
         
         <div class="dashboard-item">
+            <h3>Login</h3>
+            <button id="loginBtn">Login with Internet Identity</button>
+            <div id="loginStatus"></div>
+        </div>
+
+        <div class="dashboard-item">
             <h3>User Actions</h3>
-            <button id="registerUser">Register User</button>
-            <button id="getMyGroupId">Get My Group ID</button>
+            <button id="registerUser" disabled>Register User</button>
+            <button id="getMyGroupId" disabled>Get My Group ID</button>
         </div>
         
         <div class="dashboard-item">
@@ -34,17 +40,17 @@
                     <input type="checkbox" id="paymentSuccessful">
                     <label for="paymentSuccessful">Payment Successful</label>
                 </div>
-                <button type="button" id="storeReceipt">Store Receipt</button>
+                <button type="button" id="storeReceipt" disabled>Store Receipt</button>
             </form>
         </div>
         
         <div class="dashboard-item">
             <h3>Retrieve Receipts</h3>
             <input type="text" id="receiptId" placeholder="Receipt ID">
-            <button id="getReceipt">Get Receipt</button>
+            <button id="getReceipt" disabled>Get Receipt</button>
             
             <input type="text" id="groupId" placeholder="Group ID">
-            <button id="getGroupReceipts">Get Group Receipts</button>
+            <button id="getGroupReceipts" disabled>Get Group Receipts</button>
         </div>
         
         <div class="dashboard-item" id="result">
@@ -53,6 +59,6 @@
         </div>
     </div>
 
-    <script src="index.js"></script>
+    <script type="module" src="index.js"></script>
 </body>
 </html>

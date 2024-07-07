@@ -4,18 +4,59 @@
     "npm": ">=7.0.0"
   },
   "name": "hello",
-  "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "prebuild": "npm run prebuild --workspaces --if-present",
-    "pretest": "npm run prebuild --workspaces --if-present",
-    "start": "npm start --workspaces --if-present",
-    "test": "npm test --workspaces --if-present"
-  },
+  "version": "0.1.0",
+  "description": "Internet Computer starter application",
+  "keywords": [
+    "Internet Computer",
+    "Motoko",
+    "JavaScript",
+    "Canister"
+  ],
   "type": "module",
   "workspaces": [
     "src/hello_frontend"
   ],
+  "scripts": {
+    "build": "webpack --config webpack.config.mjs --mode production",
+    "start": "webpack serve --config webpack.config.mjs --mode development",
+    "test": "npm test --workspaces --if-present",
+    "prebuild": "npm run prebuild --workspaces --if-present",
+    "pretest": "npm run prebuild --workspaces --if-present"
+  },
   "dependencies": {
-    "@dfinity/agent": "^1.4.0"
+    "@dfinity/agent": "^1.4.0",
+    "@dfinity/auth-client": "^1.4.0",
+    "@dfinity/candid": "^1.4.0",
+    "@dfinity/identity": "^1.4.0",
+    "@dfinity/principal": "^1.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "assert": "^2.0.0",
+    "babel-loader": "^8.2.2",
+    "buffer": "^6.0.3",
+    "copy-webpack-plugin": "^11.0.0",
+    "dotenv-webpack": "^8.1.0",
+    "events": "^3.3.0",
+    "html-webpack-plugin": "^5.6.0",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "terser-webpack-plugin": "^5.3.10",
+    "util": "^0.12.4",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.15.2"
+  },
+  "browserslist": [
+    "last 2 chrome version",
+    "last 2 firefox version",
+    "last 2 safari version",
+    "last 2 edge version"
+  ],
+  "browser": {
+    "fs": false,
+    "path": false,
+    "crypto": false
   }
 }
