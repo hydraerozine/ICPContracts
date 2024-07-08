@@ -42,7 +42,7 @@ const canisterEnvVariables = await initCanisterEnv();
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // Ensure the environment variables are correctly initialized before using them
-const internetIdentityCanisterId = process.env.INTERNET_IDENTITY_CANISTER_ID || canisterEnvVariables['INTERNET_IDENTITY_CANISTER_ID'] || 'be2us-64aaa-aaaaa-qaabq-cai';
+const internetIdentityCanisterId = process.env.INTERNET_IDENTITY_CANISTER_ID || canisterEnvVariables['INTERNET_IDENTITY_CANISTER_ID'] || 'br5f7-7uaaa-aaaaa-qaaca-cai';
 const internetIdentityUrl = network === 'local'
   ? `http://${internetIdentityCanisterId}.localhost:4943/`
   : 'https://identity.ic0.app';

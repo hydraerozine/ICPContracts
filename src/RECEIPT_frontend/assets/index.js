@@ -2,7 +2,7 @@ import { Actor, HttpAgent } from "@dfinity/agent";
 import { AuthClient } from "@dfinity/auth-client";
 import { idlFactory as receiptIdlFactory } from "../../declarations/RECEIPT/RECEIPT.did.js";
 
-const receiptCanisterId = process.env.RECEIPT_CANISTER_ID || 'bkyz2-fmaaa-aaaaa-qaaaq-cai';
+const receiptCanisterId = process.env.RECEIPT_CANISTER_ID || 'bd3sg-teaaa-aaaaa-qaaba-cai';
 let receiptCanister;
 let authClient;
 

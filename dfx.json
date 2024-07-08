@@ -1,19 +1,19 @@
 {
   "canisters": {
+    "API": {
+      "main": "src/API/API.mo",
+      "type": "motoko"
+    },
     "RECEIPT": {
       "main": "src/RECEIPT/main.mo",
       "type": "motoko"
     },
     "RECEIPT_frontend": {
-      "dependencies": [
-        "RECEIPT"
-      ],
+      "dependencies": ["API", "RECEIPT"],
       "frontend": {
         "entrypoint": "src/RECEIPT_frontend/assets/index.html"
       },
-      "source": [
-        "src/RECEIPT_frontend/assets"
-      ],
+      "source": ["src/RECEIPT_frontend/assets"],
       "type": "assets"
     },
     "internet_identity": {

@@ -130,4 +130,96 @@ actor PhantasmaQueryCanister {
             ]
         }
     }
-}*/
+}
+
+
+actual dfx
+
+{
+  "canisters": {
+    "SKALE": {
+      "main": "src/SKALE/main.mo",
+      "type": "motoko",
+      "declarations": {
+        "node_compatibility": true,
+        "output": "src/declarations/SKALE"
+      },
+      "features": ["ic-https-outcalls"]
+    },
+    "PHA": {
+      "main": "src/PHA/main.mo",
+      "type": "motoko",
+      "declarations": {
+        "node_compatibility": true,
+        "output": "src/declarations/PHA"
+      },
+      "features": ["ic-https-outcalls"]
+    },
+    "RECEIPT": {
+      "main": "src/RECEIPT/main.mo",
+      "type": "motoko",
+      "declarations": {
+        "node_compatibility": true,
+        "output": "src/declarations/RECEIPT"
+      },
+      "features": ["ic-https-outcalls"]
+    },
+    "RECEIPT_frontend": {
+      "dependencies": [
+        "RECEIPT"
+      ],
+      "frontend": {
+        "entrypoint": "src/RECEIPT_frontend/assets/index.html"
+      },
+      "source": [
+        "src/RECEIPT_frontend/assets"
+      ],
+      "type": "assets"
+    },
+    "hello_backend": {
+      "declarations": {
+        "node_compatibility": true
+      },
+      "main": "src/hello_backend/main.mo",
+      "type": "motoko"
+    },
+    "jorge": {
+      "declarations": {
+        "node_compatibility": true
+      },
+      "main": "src/jorge/main.mo",
+      "type": "motoko"
+    },
+    "hello_frontend": {
+      "dependencies": [
+        "hello_backend"
+      ],
+      "source": [
+        "src/hello_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "hello_frontend"
+    },
+    "internet_identity": {
+      "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
+      "frontend": {},
+      "remote": {
+        "id": {
+          "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+        }
+      },
+      "type": "custom",
+      "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
+
+*/
