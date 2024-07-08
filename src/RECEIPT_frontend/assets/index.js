@@ -20,9 +20,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('logoutBtn').addEventListener('click', logout);
     document.getElementById('registerUser').addEventListener('click', registerUser);
     document.getElementById('getMyGroupId').addEventListener('click', getMyGroupId);
-    document.getElementById('storeReceipt').addEventListener('click', storeReceipt);
-    document.getElementById('getReceipt').addEventListener('click', getReceipt);
-    document.getElementById('getGroupReceipts').addEventListener('click', getGroupReceipts);
+    document.getElementById('storeReceiptBtn').addEventListener('click', showStoreReceiptForm);
+    document.getElementById('getReceiptsBtn').addEventListener('click', showGetReceiptsForm);
+
+    // Add this line to handle navigation item clicks
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', handleNavItemClick);
+    });
 });
 
 async function initAuth() {
@@ -45,12 +49,12 @@ async function loginWithInternetIdentity() {
             },
             onError: (error) => {
                 console.error('Login failed:', error);
-                document.getElementById('loginStatus').innerText = `Login failed: ${error}`;
+                displayResult(`Login failed: ${error}`);
             },
         });
     } catch (error) {
         console.error('Login process failed:', error);
-        document.getElementById('loginStatus').innerText = `Login process failed: ${error}`;
+        displayResult(`Login process failed: ${error}`);
     }
 }
 
@@ -58,7 +62,7 @@ async function logout() {
     await authClient.logout();
     document.getElementById('loginBtn').style.display = 'block';
     document.getElementById('logoutBtn').style.display = 'none';
-    document.getElementById('loginStatus').innerText = 'Logged out';
+    displayResult('Logged out');
     disableButtons();
 }
 
@@ -80,43 +84,61 @@ async function handleAuthenticated() {
 
     document.getElementById('loginBtn').style.display = 'none';
     document.getElementById('logoutBtn').style.display = 'block';
-    document.getElementById('loginStatus').innerText = 'Logged in';
+    displayResult('Logged in');
     
     enableButtons();
 }
 
 function enableButtons() {
-    document.getElementById('registerUser').disabled = false;
-    document.getElementById('getMyGroupId').disabled = false;
-    document.getElementById('storeReceipt').disabled = false;
-    document.getElementById('getReceipt').disabled = false;
-    document.getElementById('getGroupReceipts').disabled = false;
+    document.getElementById('registerUser').classList.remove('disabled');
+    document.getElementById('getMyGroupId').classList.remove('disabled');
+    document.getElementById('storeReceiptBtn').classList.remove('disabled');
+    document.getElementById('getReceiptsBtn').classList.remove('disabled');
 }
 
 function disableButtons() {
-    document.getElementById('registerUser').disabled = true;
-    document.getElementById('getMyGroupId').disabled = true;
-    document.getElementById('storeReceipt').disabled = true;
-    document.getElementById('getReceipt').disabled = true;
-    document.getElementById('getGroupReceipts').disabled = true;
+    document.getElementById('registerUser').classList.add('disabled');
+    document.getElementById('getMyGroupId').classList.add('disabled');
+    document.getElementById('storeReceiptBtn').classList.add('disabled');
+    document.getElementById('getReceiptsBtn').classList.add('disabled');
+}
+
+function handleNavItemClick(event) {
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    event.target.classList.add('active');
 }
 
 async function registerUser() {
     try {
         const result = await receiptCanister.registerUser();
-        document.getElementById('result').innerText = `Registration result: ${stringifyWithBigInt(result)}`;
+        displayResult(`Registration result: ${stringifyWithBigInt(result)}`);
     } catch (error) {
-        document.getElementById('result').innerText = `Error: ${error.message}`;
+        displayResult(`Error: ${error.message}`);
     }
 }
 
 async function getMyGroupId() {
     try {
         const result = await receiptCanister.getMyGroupId();
-        document.getElementById('result').innerText = `Your Group ID: ${stringifyWithBigInt(result)}`;
+        displayResult(`Your Group ID: ${stringifyWithBigInt(result)}`);
     } catch (error) {
-        document.getElementById('result').innerText = `Error: ${error.message}`;
+        displayResult(`Error: ${error.message}`);
     }
+}
+
+function showStoreReceiptForm() {
+    const mainPanel = document.getElementById('mainPanel');
+    mainPanel.innerHTML = document.getElementById('storeReceiptForm').innerHTML;
+    document.getElementById('storeReceipt').addEventListener('click', storeReceipt);
+}
+
+function showGetReceiptsForm() {
+    const mainPanel = document.getElementById('mainPanel');
+    mainPanel.innerHTML = document.getElementById('getReceiptsForm').innerHTML;
+    document.getElementById('getReceipt').addEventListener('click', getReceipt);
+    document.getElementById('getGroupReceipts').addEventListener('click', getGroupReceipts);
 }
 
 async function storeReceipt() {
@@ -138,9 +160,9 @@ async function storeReceipt() {
             form.paymentSuccessful.checked
         ];
         const result = await receiptCanister.storeReceipt(...args);
-        document.getElementById('result').innerText = `Store Receipt result: ${stringifyWithBigInt(result)}`;
+        displayResult(`Store Receipt result: ${stringifyWithBigInt(result)}`);
     } catch (error) {
-        document.getElementById('result').innerText = `Error: ${error.message}`;
+        displayResult(`Error: ${error.message}`);
     }
 }
 
@@ -148,9 +170,9 @@ async function getReceipt() {
     try {
         const receiptId = document.getElementById('receiptId').value;
         const result = await receiptCanister.getReceipt(receiptId);
-        document.getElementById('result').innerText = `Receipt: ${stringifyWithBigInt(result)}`;
+        displayResult(`Receipt: ${stringifyWithBigInt(result)}`);
     } catch (error) {
-        document.getElementById('result').innerText = `Error: ${error.message}`;
+        displayResult(`Error: ${error.message}`);
     }
 }
 
@@ -158,10 +180,16 @@ async function getGroupReceipts() {
     try {
         const groupId = document.getElementById('groupId').value;
         const result = await receiptCanister.getGroupReceipts(groupId);
-        document.getElementById('result').innerText = `Group Receipts: ${stringifyWithBigInt(result)}`;
+        displayResult(`Group Receipts: ${stringifyWithBigInt(result)}`);
     } catch (error) {
-        document.getElementById('result').innerText = `Error: ${error.message}`;
+        displayResult(`Error: ${error.message}`);
     }
+}
+
+function displayResult(message) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = `<h3>Result</h3><p>${message}</p>`;
 }
 
 // Initialize by disabling buttons that require authentication

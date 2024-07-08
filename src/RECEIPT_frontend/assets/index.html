@@ -3,61 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Receipt System Dashboard</title>
+    <title>ReceiptHub Dashboard</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Receipt System Dashboard</h1>
-        
-        <div class="dashboard-item">
-            <h3>Login</h3>
-            <button id="loginBtn">Login with Internet Identity</button>
-            <button id="logoutBtn" style="display: none;">Logout</button>
-            <div id="loginStatus"></div>
-        </div>
-
-        <div class="dashboard-item">
-            <h3>User Actions</h3>
-            <button id="registerUser" disabled>Register User</button>
-            <button id="getMyGroupId" disabled>Get My Group ID</button>
-        </div>
-        
-        <div class="dashboard-item">
-            <h3>Store Receipt</h3>
-            <form id="receiptForm">
-                <input type="text" id="customerName" placeholder="Customer Name" required>
-                <input type="text" id="managerOnDuty" placeholder="Manager on Duty" required>
-                <input type="tel" id="phoneNumber" placeholder="Phone Number" required>
-                <input type="text" id="address" placeholder="Address" required>
-                <textarea id="items" placeholder="Items (JSON format)" required></textarea>
-                <input type="number" id="subtotal" placeholder="Subtotal" step="0.01" required>
-                <input type="number" id="tax" placeholder="Tax" step="0.01" required>
-                <input type="number" id="total" placeholder="Total" step="0.01" required>
-                <input type="number" id="debitTend" placeholder="Debit Tend" step="0.01" required>
-                <input type="number" id="changeDue" placeholder="Change Due" step="0.01" required>
-                <input type="text" id="lastFourDigits" placeholder="Last Four Digits" maxlength="4" required>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="paymentSuccessful">
-                    <label for="paymentSuccessful">Payment Successful</label>
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="path_to_your_logo.png" alt="ReceiptHub Logo">
+                <h1>ReceiptHub</h1>
+            </div>
+            <nav>
+                <div class="nav-item" id="registerUser">Register User</div>
+                <div class="nav-item" id="getMyGroupId">Get My Group ID</div>
+                <div class="nav-item" id="storeReceiptBtn">Store Receipt</div>
+                <div class="nav-item" id="getReceiptsBtn">Get Receipts</div>
+                <div class="nav-item active">Overview</div>
+                <div class="nav-item">Analytics</div>
+                <div class="nav-item">Products</div>
+                <div class="nav-item">Sales</div>
+                <div class="nav-item">Payment</div>
+                <div class="nav-item">Refunds</div>
+                <div class="nav-item">Invoice</div>
+                <div class="nav-item">Returns</div>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search">
                 </div>
-                <button type="button" id="storeReceipt" disabled>Store Receipt</button>
-            </form>
-        </div>
-        
-        <div class="dashboard-item">
-            <h3>Retrieve Receipts</h3>
-            <input type="text" id="receiptId" placeholder="Receipt ID">
-            <button id="getReceipt" disabled>Get Receipt</button>
+                <div class="user-actions">
+                    <button id="loginBtn">Login with Internet Identity</button>
+                    <button id="logoutBtn" style="display: none;">Logout</button>
+                </div>
+            </header>
             
-            <input type="text" id="groupId" placeholder="Group ID">
-            <button id="getGroupReceipts" disabled>Get Group Receipts</button>
-        </div>
-        
-        <div class="dashboard-item" id="result">
-            <h3>Result</h3>
-            <p>Operation results will appear here.</p>
-        </div>
+            <section class="metrics">
+                <div class="metric-card">
+                    <h3>Total Expenditure</h3>
+                    <div class="value">$734,241</div>
+                    <div class="change positive">↑ 3.1% From last week</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Customers</h3>
+                    <div class="value">734,241</div>
+                    <div class="change positive">↑ 5.1% From last week</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Transactions</h3>
+                    <div class="value">734</div>
+                    <div class="change negative">↓ 5.1% From last week</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Receipts</h3>
+                    <div class="value">841</div>
+                    <div class="change positive">↑ 5.1% From last week</div>
+                </div>
+            </section>
+            
+            <section id="mainPanel" class="main-panel">
+                <!-- Content will be dynamically inserted here based on button clicks -->
+            </section>
+            
+            <div id="storeReceiptForm" style="display: none;">
+                <h3>Store Receipt</h3>
+                <form id="receiptForm">
+                    <input type="text" id="customerName" placeholder="Customer Name" required>
+                    <input type="text" id="managerOnDuty" placeholder="Manager on Duty" required>
+                    <input type="tel" id="phoneNumber" placeholder="Phone Number" required>
+                    <input type="text" id="address" placeholder="Address" required>
+                    <textarea id="items" placeholder="Items (JSON format)" required></textarea>
+                    <input type="number" id="subtotal" placeholder="Subtotal" step="0.01" required>
+                    <input type="number" id="tax" placeholder="Tax" step="0.01" required>
+                    <input type="number" id="total" placeholder="Total" step="0.01" required>
+                    <input type="number" id="debitTend" placeholder="Debit Tend" step="0.01" required>
+                    <input type="number" id="changeDue" placeholder="Change Due" step="0.01" required>
+                    <input type="text" id="lastFourDigits" placeholder="Last Four Digits" maxlength="4" required>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="paymentSuccessful">
+                        <label for="paymentSuccessful">Payment Successful</label>
+                    </div>
+                    <button type="button" id="storeReceipt">Store Receipt</button>
+                </form>
+            </div>
+            
+            <div id="getReceiptsForm" style="display: none;">
+                <h3>Retrieve Receipts</h3>
+                <input type="text" id="receiptId" placeholder="Receipt ID">
+                <button id="getReceipt">Get Receipt</button>
+                
+                <input type="text" id="groupId" placeholder="Group ID">
+                <button id="getGroupReceipts">Get Group Receipts</button>
+            </div>
+            
+            <div id="result" style="display: none;">
+                <h3>Result</h3>
+                <p>Operation results will appear here.</p>
+            </div>
+        </main>
     </div>
 
     <script type="module" src="index.js"></script>
