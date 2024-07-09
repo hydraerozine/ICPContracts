@@ -5,13 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ReceiptHub Dashboard</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .sidebar {
+            padding-top: 20px;
+        }
+        .logo {
+            padding: 0 20px;
+            margin-bottom: 30px;
+        }
+        .logo img {
+            width: 100%;
+            max-width: 200px; /* Increased from 150px to 200px */
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <aside class="sidebar">
             <div class="logo">
-                <img src="path_to_your_logo.png" alt="ReceiptHub Logo">
-                <h1>ReceiptHub</h1>
+                <img src="/ReceiptHub-Logo.svg" alt="ReceiptHub Logo">
             </div>
             <nav>
                 <div class="nav-item" id="registerUser">Register User</div>
@@ -23,9 +36,6 @@
                 <div class="nav-item">Products</div>
                 <div class="nav-item">Sales</div>
                 <div class="nav-item">Payment</div>
-                <div class="nav-item">Refunds</div>
-                <div class="nav-item">Invoice</div>
-                <div class="nav-item">Returns</div>
             </nav>
         </aside>
         <main class="main-content">
