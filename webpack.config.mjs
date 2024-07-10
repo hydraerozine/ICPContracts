@@ -8,13 +8,11 @@ import { createRequire } from 'module';
 import Dotenv from 'dotenv-webpack';
 
 const require = createRequire(import.meta.url);
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const network = process.env.DFX_NETWORK || 'local';
 
-// Define and initialize canister environment variables
 async function initCanisterEnv() {
   let localCanisters, prodCanisters;
   try {
@@ -41,8 +39,7 @@ const canisterEnvVariables = await initCanisterEnv();
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
-// Ensure the environment variables are correctly initialized before using them
-const internetIdentityCanisterId = process.env.INTERNET_IDENTITY_CANISTER_ID || canisterEnvVariables['INTERNET_IDENTITY_CANISTER_ID'] || 'br5f7-7uaaa-aaaaa-qaaca-cai';
+const internetIdentityCanisterId = process.env.INTERNET_IDENTITY_CANISTER_ID || 'br5f7-7uaaa-aaaaa-qaaca-cai';
 const internetIdentityUrl = network === 'local'
   ? `http://${internetIdentityCanisterId}.localhost:4943/`
   : 'https://identity.ic0.app';
@@ -99,9 +96,10 @@ export default {
     }),
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
+      DFX_NETWORK: network,
       II_URL: internetIdentityUrl,
       INTERNET_IDENTITY_CANISTER_ID: internetIdentityCanisterId,
-      ...await canisterEnvVariables,
+      ...canisterEnvVariables,
     }),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
@@ -110,9 +108,11 @@ export default {
     new CopyPlugin({
       patterns: [
         {
-          from: `src/${frontendDirectory}/assets/.ic-assets.json*`,
-          to: '.ic-assets.json5',
-          noErrorOnMissing: true,
+          from: `src/${frontendDirectory}/assets`,
+          to: path.join(__dirname, "dist", frontendDirectory),
+          filter: (filepath) => {
+            return !filepath.includes('index.html');
+          },
         },
       ],
     }),

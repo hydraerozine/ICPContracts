@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 global.fetch = fetch;
 
 const API_CANISTER_ID = "oq7qj-tiaaa-aaaap-qhn6a-cai";
-const LOCAL_NETWORK = "https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io/?id=oq7qj-tiaaa-aaaap-qhn6a-cai";
+const MAINNET = "https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io/?id=oq7qj-tiaaa-aaaap-qhn6a-cai";
 
 const API_INTERFACE = ({ IDL }) => {
   return IDL.Service({
@@ -13,7 +13,7 @@ const API_INTERFACE = ({ IDL }) => {
 };
 
 async function generateApiKey() {
-  const agent = new HttpAgent({ host: LOCAL_NETWORK });
+  const agent = new HttpAgent({ host: MAINNET });
   await agent.fetchRootKey();
 
   const API = Actor.createActor(API_INTERFACE, {

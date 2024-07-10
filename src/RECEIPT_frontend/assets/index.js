@@ -6,7 +6,6 @@ const receiptCanisterId = process.env.RECEIPT_CANISTER_ID || 'bd3sg-teaaa-aaaaa-
 let receiptCanister;
 let authClient;
 
-// Utility function to stringify objects with BigInt values
 function stringifyWithBigInt(obj) {
     return JSON.stringify(obj, (key, value) =>
         typeof value === 'bigint' ? value.toString() : value
@@ -23,7 +22,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('storeReceiptBtn').addEventListener('click', showStoreReceiptForm);
     document.getElementById('getReceiptsBtn').addEventListener('click', showGetReceiptsForm);
 
-    // Add this line to handle navigation item clicks
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', handleNavItemClick);
     });
@@ -31,6 +29,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function initAuth() {
     authClient = await AuthClient.create();
+    if (process.env.NODE_ENV !== "production") {
+        try {
+            const agent = new HttpAgent();
+            await agent.fetchRootKey();
+        } catch (err) {
+            console.error("Failed to fetch root key:", err);
+            displayResult("Failed to initialize. Please check if the local replica is running.");
+            return;
+        }
+    }
     if (await authClient.isAuthenticated()) {
         handleAuthenticated();
     }
@@ -38,13 +46,18 @@ async function initAuth() {
 
 async function loginWithInternetIdentity() {
     try {
-        const iiUrl = process.env.II_URL || `http://${process.env.INTERNET_IDENTITY_CANISTER_ID}.localhost:4943/`;
-        console.log("Internet Identity URL:", iiUrl);
-        console.log("Internet Identity Canister ID:", process.env.INTERNET_IDENTITY_CANISTER_ID);
+        const identityProviderUrl = process.env.DFX_NETWORK === "ic" 
+            ? "https://identity.ic0.app" 
+            : process.env.II_URL || `http://${process.env.INTERNET_IDENTITY_CANISTER_ID}.localhost:4943/`;
+        
+        console.log("Internet Identity URL:", identityProviderUrl);
+        
         await authClient.login({
-            identityProvider: iiUrl,
-            onSuccess: () => {
+            identityProvider: identityProviderUrl,
+            onSuccess: async () => {
                 console.log("Login successful");
+                const identity = await authClient.getIdentity();
+                console.log("Identity principal:", identity.getPrincipal().toString());
                 handleAuthenticated();
             },
             onError: (error) => {
@@ -71,7 +84,7 @@ async function handleAuthenticated() {
     const agent = new HttpAgent({ identity });
     
     if (process.env.NODE_ENV !== "production") {
-        agent.fetchRootKey().catch(err => {
+        await agent.fetchRootKey().catch(err => {
             console.warn("Unable to fetch root key. Check to ensure that your local replica is running");
             console.error(err);
         });
@@ -112,9 +125,16 @@ function handleNavItemClick(event) {
 
 async function registerUser() {
     try {
-        const result = await receiptCanister.registerUser();
+        const identity = await authClient.getIdentity();
+        const agent = new HttpAgent({ identity });
+        if (process.env.NODE_ENV !== "production") {
+            await agent.fetchRootKey();
+        }
+        const actor = Actor.createActor(receiptIdlFactory, { agent, canisterId: receiptCanisterId });
+        const result = await actor.registerUser();
         displayResult(`Registration result: ${stringifyWithBigInt(result)}`);
     } catch (error) {
+        console.error("Registration error:", error);
         displayResult(`Error: ${error.message}`);
     }
 }
@@ -124,6 +144,7 @@ async function getMyGroupId() {
         const result = await receiptCanister.getMyGroupId();
         displayResult(`Your Group ID: ${stringifyWithBigInt(result)}`);
     } catch (error) {
+        console.error("Get Group ID error:", error);
         displayResult(`Error: ${error.message}`);
     }
 }
@@ -162,6 +183,7 @@ async function storeReceipt() {
         const result = await receiptCanister.storeReceipt(...args);
         displayResult(`Store Receipt result: ${stringifyWithBigInt(result)}`);
     } catch (error) {
+        console.error("Store Receipt error:", error);
         displayResult(`Error: ${error.message}`);
     }
 }
@@ -172,6 +194,7 @@ async function getReceipt() {
         const result = await receiptCanister.getReceipt(receiptId);
         displayResult(`Receipt: ${stringifyWithBigInt(result)}`);
     } catch (error) {
+        console.error("Get Receipt error:", error);
         displayResult(`Error: ${error.message}`);
     }
 }
@@ -182,6 +205,7 @@ async function getGroupReceipts() {
         const result = await receiptCanister.getGroupReceipts(groupId);
         displayResult(`Group Receipts: ${stringifyWithBigInt(result)}`);
     } catch (error) {
+        console.error("Get Group Receipts error:", error);
         displayResult(`Error: ${error.message}`);
     }
 }
@@ -192,5 +216,12 @@ function displayResult(message) {
     resultDiv.innerHTML = `<h3>Result</h3><p>${message}</p>`;
 }
 
-// Initialize by disabling buttons that require authentication
 disableButtons();
+
+// Log environment variables for debugging
+console.log("Environment variables:", {
+    NODE_ENV: process.env.NODE_ENV,
+    DFX_NETWORK: process.env.DFX_NETWORK,
+    INTERNET_IDENTITY_CANISTER_ID: process.env.INTERNET_IDENTITY_CANISTER_ID,
+    RECEIPT_CANISTER_ID: process.env.RECEIPT_CANISTER_ID,
+});
